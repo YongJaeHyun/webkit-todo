@@ -22,7 +22,7 @@ function AddTodo(props) {
     }
   };
   return (
-    <Paper style={{ margine: 16, padding: 16 }}>
+    <Paper style={{ margin: 16, padding: 16 }}>
       <Grid container>
         <Grid xs={11} md={11} item style={{ paddingRight: 16 }}>
           <TextField

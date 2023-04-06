@@ -10,7 +10,7 @@ import {
 import { DeleteOutlined } from "@material-ui/icons";
 
 function Todo(props) {
-  const { deleteItem } = props;
+  const { deleteItem, updateItem } = props;
   const [item, setItem] = useState(props.item);
   const [isReadOnly, setIsReadOnly] = useState(true);
 
@@ -18,22 +18,22 @@ function Todo(props) {
     deleteItem(item);
   };
   const offReadOnlyMode = () => {
-    console.log("Event!", isReadOnly);
     setIsReadOnly(false);
-    console.log("ReadOnly?", isReadOnly)
+    console.log("ReadOnly?", isReadOnly);
   };
   const enterKeyEventHandler = (e) => {
     if (e.key === "Enter") {
       setIsReadOnly(true);
+      updateItem(item);
     }
   };
   const editEventHandler = (e) => {
     const value = e.target.value;
-    setItem({ item, title: value });
+    setItem({ ...item, title: value });
   };
-  const checkboxEventHandler = (e) => {
-    console.log("check box event call");
-    setItem({ item, done: !item.done });
+  const checkboxEventHandler = () => {
+    setItem({ ...item, done: !item.done });
+    updateItem({ ...item, done: !item.done });
   };
 
   return (

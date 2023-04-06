@@ -1,30 +1,29 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Todo from "./Todo";
 import AddTodo from "./AddTodo";
 import { Paper, List, Container } from "@material-ui/core";
 import "./App.css";
+import { call } from "./service/ApiService";
 
 function App() {
-  const [items, setItems] = useState([
-    { id: "0", title: "Todo 1 ", done: true },
-    { id: "1", title: "Todo 2 ", done: false },
-  ]);
-
+  const [items, setItems] = useState([]);
   const [todoItems, setTodoItems] = useState("");
 
   // add 함수 추가
-  const addItem = (item) => {
-    const thisItems = items;
-    item.id = "ID-" + thisItems.length; //key를 위한 id 추가
-    item.done = false;
-    thisItems.push(item);
-    setItems(thisItems);
+  const addItem = async (item) => {
+    const response = await call("/todo", "POST", item);
+    setItems(response.data);
     setTodoItems(
       items.length > 0 && (
         <Paper style={{ margin: 16 }}>
           <List>
             {items.map((item) => (
-              <Todo item={item} key={item.id} deleteItem={deleteItem} />
+              <Todo
+                item={item}
+                key={item.id}
+                deleteItem={deleteItem}
+                updateItem={updateItem}
+              />
             ))}
           </List>
         </Paper>
@@ -33,29 +32,39 @@ function App() {
     console.log(items);
   };
 
-  const deleteItem = useCallback(
-    (item) => {
-      const thisItems = items;
-      const newItems = thisItems.filter((e) => e.id !== item.id);
-      setItems(newItems);
-      console.log("Update Items : ", items);
-    },
-    [items]
-  );
+  const deleteItem = async (item) => {
+    const response = await call("/todo", "DELETE", item);
+    setItems(response.data);
+  };
 
-  useEffect(() => {
+  const updateItem = async (item) => {
+    console.log(item)
+    const response = await call("/todo", "PUT", item);
+    setItems(response.data);
+  };
+
+  const getAllItems = async () => {
+    const response = await call("/todo", "GET", null);
+    const items = response.data;
     setTodoItems(
       items.length > 0 && (
         <Paper style={{ margin: 16 }}>
           <List>
             {items.map((item) => (
-              <Todo item={item} key={item.id} deleteItem={deleteItem} />
+              <Todo
+                item={item}
+                key={item.id}
+                deleteItem={deleteItem}
+                updateItem={updateItem}
+              />
             ))}
           </List>
         </Paper>
       )
     );
-  }, [items, deleteItem]);
+  };
+
+  useEffect(() => getAllItems());
 
   return (
     <div className="App">
