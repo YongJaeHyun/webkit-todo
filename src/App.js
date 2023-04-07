@@ -13,6 +13,7 @@ import {
 import Todo from "./Todo";
 import AddTodo from "./AddTodo";
 import { call, signout } from "./service/ApiService";
+import DeleteAllTodo from "./DeleteAllTodo";
 
 class App extends React.Component {
   constructor(props) {
@@ -34,6 +35,12 @@ class App extends React.Component {
       this.setState({ items: response.data });
     });
   };
+
+  deleteAll = () => {
+    call("/todo/all", "DELETE", null).then((response) => {
+      this.setState({items: response.data});
+    })
+  }
 
   update = (item) => {
     call("/todo", "PUT", item).then((response) => {
@@ -82,6 +89,7 @@ class App extends React.Component {
         <Container maxWidth="md">
           <AddTodo add={this.add} />
           <div className="TodoList">{todoItems}</div>
+          <DeleteAllTodo deleteAll={this.deleteAll} />
         </Container>
       </div>
     );
