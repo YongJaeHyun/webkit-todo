@@ -10,6 +10,7 @@ import {
   Grid,
   Typography,
   Button,
+  Link,
 } from "@material-ui/core";
 import "./App.css";
 import { call, signout } from "./service/ApiService";
@@ -85,14 +86,29 @@ function App() {
 
   const getAllItems = useCallback(async () => {
     const response = await call("/todo", "GET", null);
-    setItems(response.data);
-    setTodoComponents();
-  }, [setTodoComponents]);
+    const items = response.data;
+    setTodoItems(
+      items.length > 0 && (
+        <Paper style={{ margin: 16 }}>
+          <List>
+            {items.map((item) => (
+              <Todo
+                item={item}
+                key={item.id}
+                deleteItem={deleteItem}
+                updateItem={updateItem}
+              />
+            ))}
+          </List>
+        </Paper>
+      )
+    );
+  }, [deleteItem]);
 
   useEffect(() => {
     getAllItems();
     setLoading(false);
-  }, [getAllItems, setLoading]);
+  }, [getAllItems]);
 
   const navigationBar = (
     <AppBar position="static">
@@ -102,6 +118,16 @@ function App() {
             <Typography variant="h6">오늘의 할일</Typography>
           </Grid>
           <Grid item>
+            <Button color="inherit" style={{ marginRight: 10 }}>
+              <Link
+                href="/user/update"
+                variant="body2"
+                color="inherit"
+                style={{ textDecoration: "none" }}
+              >
+                회원정보수정
+              </Link>
+            </Button>
             <Button color="inherit" onClick={signout}>
               logout
             </Button>

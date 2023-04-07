@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import UpdateUserInfo from "./UpdateUserInfo";
 
 function Copyright() {
   return (
@@ -22,6 +23,7 @@ function AppRouter() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/user/update" element={<UpdateUserInfo />} />
           <Route path="/" element={<App />} />
         </Routes>
       </div>
