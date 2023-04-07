@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "../app-config";
 const ACCESS_TOKEN = "ACCESS_TOKEN";
+const USER_ID = "USER_ID";
 
 export function call(api, method, request) {
   let headers = new Headers({
@@ -8,6 +9,12 @@ export function call(api, method, request) {
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
   if (accessToken) {
     headers.append("Authorization", "Bearer " + accessToken);
+  }
+
+  const parseJSON = function(response) {
+    return response.text().then(function(text) {
+      return text ? JSON.parse(text) : {}
+    })
   }
 
   let options = {
@@ -20,7 +27,7 @@ export function call(api, method, request) {
   }
   return fetch(options.url, options)
     .then((response) =>
-      response.json().then((json) => {
+    parseJSON(response).then((json) => {
         if (!response.ok) {
           return Promise.reject(json);
         }
@@ -43,6 +50,8 @@ export function signin(userDTO) {
     if (response.token) {
       // local 스토리지에 토큰 저장
       localStorage.setItem(ACCESS_TOKEN, response.token);
+      localStorage.setItem(USER_ID, response.id);
+
       // token이 존재하는 경우 todo 화면으로 리디렉트
       window.location.href = "/";
     }
@@ -71,5 +80,7 @@ export function signup(userDTO) {
 export function signout() {
   // local 스토리지에 토큰 삭제
   localStorage.setItem(ACCESS_TOKEN, null);
+  localStorage.setItem(USER_ID, null);
+
   window.location.href = "/";
 }

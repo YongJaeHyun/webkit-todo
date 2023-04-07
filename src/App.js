@@ -5,6 +5,7 @@ import {
   Button,
   Container,
   Grid,
+  Link,
   List,
   Paper,
   Toolbar,
@@ -38,9 +39,9 @@ class App extends React.Component {
 
   deleteAll = () => {
     call("/todo/all", "DELETE", null).then((response) => {
-      this.setState({items: response.data});
-    })
-  }
+      this.setState({ items: response.data });
+    });
+  };
 
   update = (item) => {
     call("/todo", "PUT", item).then((response) => {
@@ -73,6 +74,16 @@ class App extends React.Component {
               <Typography variant="h6">오늘의 할일</Typography>
             </Grid>
             <Grid item>
+              <Button color="inherit" style={{ marginRight: 10 }}>
+                <Link
+                  href="/user/update"
+                  variant="body2"
+                  color="inherit"
+                  style={{ textDecoration: "none" }}
+                >
+                  회원정보수정
+                </Link>
+              </Button>
               <Button color="inherit" onClick={signout}>
                 logout
               </Button>
