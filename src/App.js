@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import "./App.css";
 import { call, signout } from "./service/ApiService";
+import DeleteAllTodo from "./DeleteAllTodo";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -50,6 +51,11 @@ function App() {
     },
     [items]
   );
+
+  const deleteAllItem = async () => {
+    const response = await call("/todo/all", "DELETE", null);
+    setItems(response.data);
+  };
 
   const updateItem = async (item) => {
     const response = await call("/todo", "PUT", item);
@@ -112,6 +118,7 @@ function App() {
       <Container maxWidth="md">
         <AddTodo addItem={addItem} />
         <div className="TodoList">{todoItems}</div>
+        <DeleteAllTodo deleteAllItem={deleteAllItem} />
       </Container>
     </div>
   );
