@@ -47,13 +47,15 @@ export function call(api, method, request) {
 
 export function signin(userDTO) {
   return call("/auth/signin", "POST", userDTO).then((response) => {
-    if (response.token) {
+    if (response?.token) {
       // local 스토리지에 토큰 저장
       localStorage.setItem(ACCESS_TOKEN, response.token);
       localStorage.setItem(USER_ID, response.id);
 
       // token이 존재하는 경우 todo 화면으로 리디렉트
       window.location.href = "/";
+    } else {
+      alert("아이디나 비밀번호가 다릅니다.")
     }
   });
 }
